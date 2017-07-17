@@ -14,8 +14,8 @@ class LightingCues {
     typedef void (LightingCues::*FP)();
     //Command table that we index into with a cue to choose the function we are running.
     FP const commandTable[44] = {
-      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::pausePlay, &LightingCues::blackout,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::toggleLight,
+      &LightingCues::testOffset, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
@@ -46,7 +46,16 @@ class LightingCues {
 
     void setLightColor(int color); //hex 
     void setRainbow();
-
+    void setTimeOffset(int set);
+    int getTimeOffset();
+    void testOffset();
+    int getGHue();
+    void setGHue(int change);
+    void setBrightness(int change);
+    int getBrightness();
+    void setSpeed(int change);
+    int getSpeed();
+    
     //Helpers
     bool shouldSetCue(int cue);
     void callCue(int cue);

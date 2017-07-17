@@ -24,9 +24,10 @@
 	int lightSpeed = 10; // 0 - 10
 	int brightness = 255;
 	bool isActive = true; 
+	int timeOffSet = 0;
 
 	LightingCues::LightingCues(){
-
+		
 	}
 	LightingCues::~LightingCues(){
 
@@ -96,6 +97,37 @@
 
 	void LightingCues::NOCUE() {
 	}
+	void LightingCues::setTimeOffset(int set){
+		timeOffSet = set;
+	}
+	int LightingCues::getTimeOffset(){
+		return timeOffSet;
+	}
+	void LightingCues::testOffset(){
+		if(timeOffSet == 1000){
+			timeOffSet = 0;
+		}else{
+			timeOffSet = 1000;
+		}
+	}
+	int LightingCues::getBrightness(){
+		return brightness;
+	}
+	void LightingCues::setBrightness(int change){
+		brightness = change;
+	}
+	int LightingCues::getSpeed(){
+		return lightSpeed;
+	}
+	void LightingCues::setSpeed(int change){
+		lightSpeed = change;
+	}
+	int LightingCues::getGHue(){
+		return gHue;
+	}
+	void LightingCues::setGHue(int change){
+		gHue = change;
+	}
 
 	// void LightingCues::addGlitter( fract8 chanceOfGlitter) 
 	// {
@@ -108,7 +140,7 @@
 	{
 	  // a colored dot sweeping back and forth, with fading trails
 	  fadeToBlackBy( leds, NUM_LEDS, 2);
-	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS);
+	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS,timeOffSet,0);
 	  leds[pos] += CHSV( gHue, 255, brightness);
 	}
 	void LightingCues::larson(){
@@ -134,7 +166,7 @@
 	  fadeToBlackBy( leds, NUM_LEDS, 11 - lightSpeed);
 	  byte dothue = 0;
 	  for( int i = 0; i < lightSpeed + 5; i++) {
-	    leds[beatsin16(i + 7,0,NUM_LEDS)] |= CHSV(dothue, 200, brightness);
+	    leds[beatsin16(i + 7,0,NUM_LEDS,timeOffSet,0)] |= CHSV(dothue, 200, brightness);
 	    dothue += 256 / 8;
 	  }
 	}
@@ -149,7 +181,7 @@
   }
 
   bool LightingCues::shouldSetCue(int cue) {
-    if (cue <= 3 || cue == 27 || cue == 31){
+    if (cue <= 4 || cue == 27 || cue == 31){
       callCue(cue);
       return false;
     }
