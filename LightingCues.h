@@ -14,7 +14,7 @@ class LightingCues {
     typedef void (LightingCues::*FP)();
     //Command table that we index into with a cue to choose the function we are running.
     FP const commandTable[44] = {
-      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::toggleLight,
+      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::pausePlay, &LightingCues::blackout,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
@@ -28,6 +28,7 @@ class LightingCues {
     };
     
     // Animations
+    void blackout();
     void sinelon();
     void larson();
     void bpm();
@@ -39,13 +40,13 @@ class LightingCues {
     // State modifiers
     void speedUp();
     void slowDown();
-    void toggleLight();
+    void pausePlay();
     void brightnessUp();
     void brightnessDown();
 
     void setLightColor(int color); //hex 
     void setRainbow();
-    
+
     //Helpers
     bool shouldSetCue(int cue);
     void callCue(int cue);

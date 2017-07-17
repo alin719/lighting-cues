@@ -41,14 +41,11 @@
 	  int curTime = micros();
 	  if(curTime - lastUpdate > MICROS_PER_UPDATE){
 	    lastUpdate = curTime;
-
-	    //Call proper function
-	    if (curCue < 44) {
-        callCue(curCue);
-	    }
-      
+   
 	    // send the 'leds' array out to the actual LED strip
 	    if(isActive){
+        //Call proper function
+        if (curCue < 44) callCue(curCue);
 	   		FastLED.show();  
 	    }
 	  }
@@ -74,7 +71,7 @@
 			lightSpeed--;
 		}
 	}
-	void LightingCues::toggleLight(){
+	void LightingCues::pausePlay(){
 		isActive = !isActive;
 	}
 	void LightingCues::brightnessUp(){
@@ -91,8 +88,13 @@
     if (shouldSetCue(cue)) curCue = cue;
 	}
 
+  void LightingCues::blackout() {
+    fadeToBlackBy(leds, NUM_LEDS, 255);
+    FastLED.show();  
+    pausePlay();
+  }
+
 	void LightingCues::NOCUE() {
-		fadeToBlackBy(leds, NUM_LEDS, 255);
 	}
 
 	// void LightingCues::addGlitter( fract8 chanceOfGlitter) 
