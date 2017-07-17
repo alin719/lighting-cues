@@ -15,7 +15,7 @@ class LightingCues {
     //Command table that we index into with a cue to choose the function we are running.
     FP const commandTable[44] = {
       &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::toggleLight,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::testOffset, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
@@ -45,8 +45,11 @@ class LightingCues {
 
     void setLightColor(int color); //hex 
     void setRainbow();
-    void LightingCues::setTimeOffset(int set);
-    int LightingCues::getTimeOffset();
+    void setTimeOffset(int set);
+    int getTimeOffset();
+    void testOffset();
+    int getGHue();
+    void setGHue(int change);
     
     //Helpers
     bool shouldSetCue(int cue);

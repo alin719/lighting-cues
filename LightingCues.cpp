@@ -101,6 +101,19 @@
 	int LightingCues::getTimeOffset(){
 		return timeOffSet;
 	}
+	void LightingCues::testOffset(){
+		if(timeOffSet == 1000){
+			timeOffSet = 0;
+		}else{
+			timeOffSet = 1000;
+		}
+	}
+	int LightingCues::getGHue(){
+		return gHue;
+	}
+	void LightingCues::setGHue(int change){
+		gHue = change;
+	}
 
 	// void LightingCues::addGlitter( fract8 chanceOfGlitter) 
 	// {
@@ -113,7 +126,7 @@
 	{
 	  // a colored dot sweeping back and forth, with fading trails
 	  fadeToBlackBy( leds, NUM_LEDS, 2);
-	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS,0,0);
+	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS,timeOffSet,0);
 	  leds[pos] += CHSV( gHue, 255, brightness);
 	}
 	void LightingCues::larson(){
@@ -154,7 +167,7 @@
   }
 
   bool LightingCues::shouldSetCue(int cue) {
-    if (cue <= 3 || cue == 27 || cue == 31){
+    if (cue <= 4 || cue == 27 || cue == 31){
       callCue(cue);
       return false;
     }
