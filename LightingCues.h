@@ -11,33 +11,23 @@ class LightingCues {
     void setCue(int cue);
 
   private:
-
     typedef void (LightingCues::*FP)();
-      FP const commandTable[44] = {
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-        &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE
-      };
-      
-    void setLightColor(int color); //hex 
-    void setRainbow();
-    //void confetti();
-    void speedUp();
-    void slowDown();
-    void toggleLight();
-    void brightnessUp();
-    void brightnessDown();
-    void NOCUE();
-
-    // void addGlitter(fract8 chanceOfGlitter);
+    //Command table that we index into with a cue to choose the function we are running.
+    FP const commandTable[44] = {
+      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::toggleLight,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::speedUp,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::slowDown,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::bpm,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::juggle,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::sinelon, &LightingCues::rainbowCycle
+    };
+    
+    // Animations
     void sinelon();
     void larson();
     void bpm();
@@ -45,8 +35,23 @@ class LightingCues {
     void juggle();
     void solidColor();
     void rainbowCycle();
+
+    // State modifiers
+    void speedUp();
+    void slowDown();
+    void toggleLight();
+    void brightnessUp();
+    void brightnessDown();
+
+    void setLightColor(int color); //hex 
+    void setRainbow();
+    
+    //Helpers
+    bool shouldSetCue(int cue);
+    void callCue(int cue);
+    void NOCUE();
 };
 
-extern LightingCues LC;
+// extern LightingCues LC;
 
 #endif

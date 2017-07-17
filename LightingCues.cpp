@@ -13,37 +13,6 @@
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
 
-// LightingCues lc;
-
-    // typedef void (LightingCues::*FP)();
-    //   FP const commandTable[44] = {
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-    //     &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE
-    //   };
-	// typedef void (LightingCues::*FP)();
-	// FP const commandTable[44] = {
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-	//   &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE
-	// };
-
 	CRGB leds[NUM_LEDS];
 	uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 	uint8_t gHue = 0; // rotating "base color" used by many of the patterns
@@ -57,8 +26,6 @@
 	bool isActive = true; 
 
 	LightingCues::LightingCues(){
-		// FP initTable[] = 
-		// commandTable = initTable;
 
 	}
 	LightingCues::~LightingCues(){
@@ -74,11 +41,12 @@
 	  int curTime = micros();
 	  if(curTime - lastUpdate > MICROS_PER_UPDATE){
 	    lastUpdate = curTime;
+
 	    //Call proper function
-		// ((LightingCues*)this)->LightingCues::commandTable[curCue]()
-		// lc.*(lc)
-	    setRainbow();
-	    // confetti();
+	    if (curCue < 44) {
+        callCue(curCue);
+	    }
+      
 	    // send the 'leds' array out to the actual LED strip
 	    if(isActive){
 	   		FastLED.show();  
@@ -97,7 +65,7 @@
 		rainbowCue = true;
 	}
 	void LightingCues::speedUp(){
-		if(lightSpeed < 10){
+		if(lightSpeed < 50){
 			lightSpeed++;	
 		}
 	}
@@ -120,7 +88,7 @@
 		}
 	}
 	void LightingCues::setCue(int cue){
-		curCue = cue;
+    if (shouldSetCue(cue)) curCue = cue;
 	}
 
 	void LightingCues::NOCUE() {
@@ -138,7 +106,7 @@
 	  // a colored dot sweeping back and forth, with fading trails
 	  fadeToBlackBy( leds, NUM_LEDS, 2);
 	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS);
-	  leds[pos] += CHSV( gHue, 255, 192);
+	  leds[pos] += CHSV( gHue, 255, brightness);
 	}
 	void LightingCues::larson(){
 
@@ -163,7 +131,7 @@
 	  fadeToBlackBy( leds, NUM_LEDS, 11 - lightSpeed);
 	  byte dothue = 0;
 	  for( int i = 0; i < lightSpeed + 5; i++) {
-	    leds[beatsin16(i + 7,0,NUM_LEDS)] |= CHSV(dothue, 200, 255);
+	    leds[beatsin16(i + 7,0,NUM_LEDS)] |= CHSV(dothue, 200, brightness);
 	    dothue += 256 / 8;
 	  }
 	}
@@ -172,9 +140,25 @@
 	    leds[i] = currColor;
 	  }
 	}
+
+  void LightingCues::callCue(int cue) {
+    ((LightingCues*)this->*(commandTable[cue]))();
+  }
+
+  bool LightingCues::shouldSetCue(int cue) {
+    if (cue <= 3 || cue == 27 || cue == 31){
+      callCue(cue);
+      return false;
+    }
+    if (commandTable[cue] == &LightingCues::NOCUE) return false;
+    return true;
+  }
+
 	void LightingCues::rainbowCycle() {
 	    for(int i=0; i< NUM_LEDS; i++) {
-	      leds[i] = CHSV(gHue,200,255);
+	      leds[i] = CHSV(gHue,200,brightness);
 	    }
 	    gHue += lightSpeed / 3;
 	}
+
+
