@@ -108,6 +108,18 @@
 			timeOffSet = 1000;
 		}
 	}
+	int LightingCues::getBrightness(){
+		return brightness;
+	}
+	void LightingCues::setBrightness(int change){
+		brightness = change;
+	}
+	int LightingCues::getSpeed(){
+		return lightSpeed;
+	}
+	void LightingCues::setSpeed(int change){
+		lightSpeed = change;
+	}
 	int LightingCues::getGHue(){
 		return gHue;
 	}

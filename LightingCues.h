@@ -50,7 +50,10 @@ class LightingCues {
     void testOffset();
     int getGHue();
     void setGHue(int change);
-    
+    void setBrightness(int change);
+    int getBrightness();
+    void setSpeed(int change);
+    int getSpeed();
     //Helpers
     bool shouldSetCue(int cue);
     void callCue(int cue);
