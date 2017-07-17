@@ -45,6 +45,8 @@ class LightingCues {
 
     void setLightColor(int color); //hex 
     void setRainbow();
+    void LightingCues::setTimeOffset(int set);
+    int LightingCues::getTimeOffset();
     
     //Helpers
     bool shouldSetCue(int cue);

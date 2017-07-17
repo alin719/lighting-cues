@@ -24,9 +24,10 @@
 	int lightSpeed = 10; // 0 - 10
 	int brightness = 255;
 	bool isActive = true; 
+	int timeOffSet = 0;
 
 	LightingCues::LightingCues(){
-
+		
 	}
 	LightingCues::~LightingCues(){
 
@@ -94,6 +95,12 @@
 	void LightingCues::NOCUE() {
 		fadeToBlackBy(leds, NUM_LEDS, 255);
 	}
+	void LightingCues::setTimeOffset(int set){
+		timeOffSet = set;
+	}
+	int LightingCues::getTimeOffset(){
+		return timeOffSet;
+	}
 
 	// void LightingCues::addGlitter( fract8 chanceOfGlitter) 
 	// {
@@ -106,7 +113,7 @@
 	{
 	  // a colored dot sweeping back and forth, with fading trails
 	  fadeToBlackBy( leds, NUM_LEDS, 2);
-	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS);
+	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS,0,0);
 	  leds[pos] += CHSV( gHue, 255, brightness);
 	}
 	void LightingCues::larson(){
