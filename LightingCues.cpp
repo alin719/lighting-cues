@@ -92,6 +92,7 @@
 	}
 
 	void LightingCues::NOCUE() {
+		fadeToBlackBy(leds, NUM_LEDS, 255);
 	}
 
 	// void LightingCues::addGlitter( fract8 chanceOfGlitter) 
