@@ -152,7 +152,7 @@
 	  fadeToBlackBy( leds, NUM_LEDS, 11 - lightSpeed);
 	  byte dothue = 0;
 	  for( int i = 0; i < lightSpeed + 5; i++) {
-	    leds[beatsin16(i + 7,0,NUM_LEDS)] |= CHSV(dothue, 200, brightness);
+	    leds[beatsin16(i + 7,0,NUM_LEDS,timeOffSet,0)] |= CHSV(dothue, 200, brightness);
 	    dothue += 256 / 8;
 	  }
 	}
