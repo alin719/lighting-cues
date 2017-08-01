@@ -10,11 +10,19 @@ class LightingCues {
     void lightingLoop();
     void setCue(int cue);
 
+    // Sync Modifiers
+    void setGHue(int change);
+    int getGHue();
+    void setBrightness(int change);
+    int getBrightness();
+    void setSpeed(int change);
+    int getSpeed();
+
   private:
     typedef void (LightingCues::*FP)();
     //Command table that we index into with a cue to choose the function we are running.
     FP const commandTable[44] = {
-      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::toggleLight,
+      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::testOffset, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
@@ -37,24 +45,20 @@ class LightingCues {
     void solidColor();
     void rainbowCycle();
 
-    // State modifiers
+    // State modifier buttons
     void speedUp();
     void slowDown();
     void pausePlay();
     void brightnessUp();
     void brightnessDown();
 
-    void setLightColor(int color); //hex 
-    void setRainbow();
+    // Sync modifiers
     void setTimeOffset(int set);
     int getTimeOffset();
+
+    void setLightColor(int color); //hex 
+    void setRainbow();
     void testOffset();
-    int getGHue();
-    void setGHue(int change);
-    void setBrightness(int change);
-    int getBrightness();
-    void setSpeed(int change);
-    int getSpeed();
     
     //Helpers
     bool shouldSetCue(int cue);
