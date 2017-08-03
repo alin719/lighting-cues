@@ -13,6 +13,8 @@ class LightingCues {
     // Sync Modifiers
     void setGHue(int change);
     int getGHue();
+    void setTimeOffset(int set);
+    int getTimeOffset();
     void setBrightness(int change);
     int getBrightness();
     void setSpeed(int change);
@@ -51,10 +53,6 @@ class LightingCues {
     void pausePlay();
     void brightnessUp();
     void brightnessDown();
-
-    // Sync modifiers
-    void setTimeOffset(int set);
-    int getTimeOffset();
 
     void setLightColor(int color); //hex 
     void setRainbow();
