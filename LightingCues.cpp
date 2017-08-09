@@ -46,7 +46,7 @@
 	void LightingCues::lightingLoop(){
 
 	    //Call proper function
-    	if (isActive && curCue < 44){
+    	if (curCue < 44){
     		callCue(curCue);
    			FastLED.show(); 
     	}  
@@ -73,6 +73,9 @@
 	}
 	void LightingCues::activate(){
 		isActive = !isActive;
+		if(!isActive){
+			blackout();
+		}
 	}
 
 	void LightingCues::slowDown(){
@@ -100,7 +103,6 @@
 	void LightingCues::blackout() {
 		fadeToBlackBy(leds, NUM_LEDS, 255);
 		FastLED.show();  
-		pausePlay();
 	}
 
 	void LightingCues::NOCUE() {
