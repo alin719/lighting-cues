@@ -46,7 +46,7 @@ class LightingCues {
     void juggle();
     void solidColor();
     void rainbowCycle();
-
+    void staggerRainbow();
     // State modifier buttons
     void speedUp();
     void slowDown();

@@ -39,21 +39,19 @@
 	}
 	void LightingCues::lightingLoop(){
 
-	  int curTime = micros();
-	  if(curTime - lastUpdate > MICROS_PER_UPDATE){
-	    lastUpdate = curTime;
-   
 	    // send the 'leds' array out to the actual LED strip
 	    if(isActive){
-        //Call proper function
-        if (curCue < 44) callCue(curCue);
+	    //Call proper function
+	    if (curCue < 44) callCue(curCue);
 	   		FastLED.show();  
 	    }
-	  }
-	  if(curTime - lastGHue > (11 - lightSpeed) * 10000){
-	    lastGHue = curTime;
-	    gHue++;
-    	}
+		if(curTime - lastGHue > (11 - lightSpeed) * 10000){
+		lastGHue = curTime;
+		gHue++;
+		}
+	}
+	void LightingCues::getPosition(int virtual, int max, int min){
+		
 	}
 	void LightingCues::setLightColor(int color){
 		rainbowCue = false;
