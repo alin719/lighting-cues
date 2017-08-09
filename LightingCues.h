@@ -24,7 +24,7 @@ class LightingCues {
     typedef void (LightingCues::*FP)();
     //Command table that we index into with a cue to choose the function we are running.
     FP const commandTable[44] = {
-      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::activate,
+      &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::blackout,
       &LightingCues::testOffset, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
