@@ -71,6 +71,10 @@
 			lightSpeed++;	
 		}
 	}
+	void LightingCues::activate(){
+		isActive = !isActive;
+	}
+
 	void LightingCues::slowDown(){
 		if(lightSpeed > 0){
 			lightSpeed--;
