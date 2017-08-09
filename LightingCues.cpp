@@ -26,6 +26,9 @@
 	bool isActive = true; 
 	int timeOffSet = 0;
 
+	CRGBPalette16 currentPalette;
+	TBlendType currentBlending;
+
 	LightingCues::LightingCues(){
 		
 	}
@@ -36,6 +39,9 @@
 		delay(3000);
   		FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 		FastLED.setBrightness(brightness);
+
+		currentPalette = RainbowColors_p;
+    	currentBlending = LINEARBLEND;
 	}
 	void LightingCues::lightingLoop(){
 
@@ -84,14 +90,14 @@
 		}
 	}
 	void LightingCues::setCue(int cue){
-    if (shouldSetCue(cue)) curCue = cue;
+    	if (shouldSetCue(cue)) curCue = cue;
 	}
 
-  void LightingCues::blackout() {
-    fadeToBlackBy(leds, NUM_LEDS, 255);
-    FastLED.show();  
-    pausePlay();
-  }
+	void LightingCues::blackout() {
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		FastLED.show();  
+		pausePlay();
+	}
 
 	void LightingCues::NOCUE() {
 	}
@@ -139,7 +145,7 @@
 	  // a colored dot sweeping back and forth, with fading trails
 	  fadeToBlackBy( leds, NUM_LEDS, 2);
 	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS,timeOffSet,0);
-	  leds[pos] += CHSV( gHue, 255, brightness);
+	  leds[pos] += ColorFromPalette(currentPalette, gHue, 255, brightness);
 	}
 	void LightingCues::larson(){
 
@@ -149,10 +155,9 @@
 	{
 	  // colored stripes pulsing at a defined Beats-Per-Minute (BPM)
 	  uint8_t BeatsPerMinute = 62;
-	  CRGBPalette16 palette = PartyColors_p;
 	  uint8_t beat = beatsin8( BeatsPerMinute, 64, 255);
 	  for( int i = 0; i < NUM_LEDS; i++) { //9948
-	    leds[i] = ColorFromPalette(palette, gHue+(i*2), beat-gHue+(i*10));
+	    leds[i] = ColorFromPalette(currentPalette, gHue+(i*2), beat-gHue+(i*10));
 	  }
 	}
 	void LightingCues::strobeColor(){
@@ -189,7 +194,7 @@
 
 	void LightingCues::rainbowCycle() {
 	    for(int i=0; i< NUM_LEDS; i++) {
-	      leds[i] = CHSV(gHue,200,brightness);
+	      leds[i] = ColorFromPalette(currentPalette,gHue,200,brightness);
 	    }
 	    gHue += lightSpeed / 3;
 	}
