@@ -102,7 +102,16 @@
 
 	void LightingCues::blackout() {
 		fadeToBlackBy(leds, NUM_LEDS, 255);
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		fadeToBlackBy(leds, NUM_LEDS, 255);
 		FastLED.show();  
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		FastLED.show();  
+		pausePlay();
 	}
 
 	void LightingCues::NOCUE() {
