@@ -45,8 +45,8 @@
    			FastLED.show(); 
     	}  
 	    
-		if(curTime - lastGHue > (11 - lightSpeed) * 10000){
-		lastGHue = curTime;
+		if(micros() - lastGHue > (11 - lightSpeed) * 10000){
+		lastGHue = micros();
 		gHue++;
 		}
 	}
