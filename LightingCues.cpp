@@ -56,7 +56,7 @@
 		gHue++;
 		}
 	}
-	void LightingCues::getPosition(int virtual, int max, int min){
+	void LightingCues::getPosition(int virtualAddr, int max, int min){
 		
 	}
 	void LightingCues::setLightColor(int color){
@@ -145,7 +145,7 @@
 	  // a colored dot sweeping back and forth, with fading trails
 	  fadeToBlackBy( leds, NUM_LEDS, 2);
 	  int pos = beatsin16(lightSpeed * 6,0,NUM_LEDS,timeOffSet,0);
-	  leds[pos] += ColorFromPalette(currentPalette, gHue, 255, brightness);
+	  leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);
 	}
 	void LightingCues::larson(){
 
@@ -194,7 +194,7 @@
 
 	void LightingCues::rainbowCycle() {
 	    for(int i=0; i< NUM_LEDS; i++) {
-	      leds[i] = ColorFromPalette(currentPalette,gHue,200,brightness);
+	      leds[i] = ColorFromPalette(currentPalette,gHue,brightness,currentBlending);
 	    }
 	    gHue += lightSpeed / 3;
 	}

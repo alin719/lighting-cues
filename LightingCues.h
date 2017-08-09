@@ -62,6 +62,8 @@ class LightingCues {
     bool shouldSetCue(int cue);
     void callCue(int cue);
     void NOCUE();
+
+    void getPosition(int virtualAddr, int max, int min);
 };
 
 // extern LightingCues LC;
