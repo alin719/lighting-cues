@@ -9,10 +9,10 @@
 #define DATA_PIN    2
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS    67
+#define NUM_LEDS    150
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
-#define REACT_FADE_INTERVAL 100 //0-255
+#define REACT_FADE_INTERVAL 50 //0-255
 	CRGB leds[NUM_LEDS];
 	uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 	uint8_t gHue = 0; // rotating "base color" used by many of the patterns
@@ -185,13 +185,14 @@
 	  }
 	}
 	void LightingCues::rainbowReact(){
-		if(!peakAmp){
+		if(peakAmp){
 			for(int i=0; i< NUM_LEDS; i++) {
 	      	leds[i] = ColorFromPalette(currentPalette,gHue,peakAmp,currentBlending);
 	   		gHue += lightSpeed / 3;
-	    	peakAmp = 0;
 	   		}
-		}else{
+	   	peakAmp = 0;
+		}
+		else{
 			fadeToBlackBy(leds, NUM_LEDS, REACT_FADE_INTERVAL);
 		}
 	}

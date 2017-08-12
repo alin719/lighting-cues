@@ -35,7 +35,7 @@ class LightingCues {
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::slowDown,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::bpm,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::juggle,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::sinelon, &LightingCues::rainbowCycle
+      &LightingCues::NOCUE, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
     };
     
     // Animations
