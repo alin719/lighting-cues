@@ -19,6 +19,7 @@ class LightingCues {
     int getBrightness();
     void setSpeed(int change);
     int getSpeed();
+    void peakDet(int amp);
 
   private:
     typedef void (LightingCues::*FP)();
@@ -47,13 +48,14 @@ class LightingCues {
     void solidColor();
     void rainbowCycle();
     void staggerRainbow();
+    void rainbowReact();
+    void solidReact();
     // State modifier buttons
     void speedUp();
     void slowDown();
     void pausePlay();
     void brightnessUp();
     void brightnessDown();
-    void activate();
     void setLightColor(int color); //hex 
     void setRainbow();
     void testOffset();

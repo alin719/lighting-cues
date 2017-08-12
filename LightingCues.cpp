@@ -12,7 +12,7 @@
 #define NUM_LEDS    67
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
-
+#define REACT_FADE_INTERVAL 100 //0-255
 	CRGB leds[NUM_LEDS];
 	uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 	uint8_t gHue = 0; // rotating "base color" used by many of the patterns
@@ -25,6 +25,7 @@
 	int brightness = 255;
 	bool isActive = true; 
 	int timeOffSet = 0;
+	int peakAmp = 0;
 
 	CRGBPalette16 currentPalette;
 	TBlendType currentBlending;
@@ -71,13 +72,6 @@
 			lightSpeed++;	
 		}
 	}
-	void LightingCues::activate(){
-		isActive = !isActive;
-		if(!isActive){
-			blackout();
-		}
-	}
-
 	void LightingCues::slowDown(){
 		if(lightSpeed > 0){
 			lightSpeed--;
@@ -99,7 +93,9 @@
 	void LightingCues::setCue(int cue){
     	if (shouldSetCue(cue)) curCue = cue;
 	}
-
+	void LightingCues::peakDet(int amp){
+		peakAmp = amp;
+	}
 	void LightingCues::blackout() {
 		fadeToBlackBy(leds, NUM_LEDS, 255);
 		fadeToBlackBy(leds, NUM_LEDS, 255);
@@ -188,10 +184,19 @@
 	    dothue += 256 / 8;
 	  }
 	}
-	void LightingCues::solidColor(){
-	  for(int i=0; i < NUM_LEDS; i++){
-	    leds[i] = currColor;
-	  }
+	void LightingCues::rainbowReact(){
+		if(!peakAmp){
+			for(int i=0; i< NUM_LEDS; i++) {
+	      	leds[i] = ColorFromPalette(currentPalette,gHue,peakAmp,currentBlending);
+	   		gHue += lightSpeed / 3;
+	    	peakAmp = 0;
+	   		}
+		}else{
+			fadeToBlackBy(leds, NUM_LEDS, REACT_FADE_INTERVAL);
+		}
+	}
+	void LightingCues::solidReact(){
+
 	}
 
   void LightingCues::callCue(int cue) {
