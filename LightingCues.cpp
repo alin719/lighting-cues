@@ -12,21 +12,26 @@
 #define NUM_LEDS    67
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
-#define REACT_FADE_INTERVAL 50 //0-255
-	CRGB leds[NUM_LEDS];
-	uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
-	uint8_t gHue = 0; // rotating "base color" used by many of the patterns
-	int lastUpdate = 0;
-	int lastGHue = 0;
-	int currColor = 0;
-	int curCue = 0;
-	bool rainbowCue = true;
-	int lightSpeed = 10; // 0 - 10
-	int brightness = 255;
-	bool isActive = true; 
-	int timeOffSet = 0;
-	int peakAmp = 0;
+#define REACT_FADE_INTERVAL 30 //0-255
 
+	CRGB leds[NUM_LEDS];
+	static uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
+	static uint8_t gHue = 0; // rotating "base color" used by many of the patterns
+	static int lastUpdate = 0;
+	static int lastGHue = 0;
+	static int currColor = 0;
+	static int curCue = 0;
+	static bool rainbowCue = true;
+	static int lightSpeed = 10; // 0 - 10
+	static int brightness = 255;
+	static bool isActive = true; 
+	static int timeOffSet = 0;
+	static int peakAmp = 0;
+
+	static int virtualAddress = 0;
+	static int maxDrums = 0;
+	static int minDrums = 0;
+	
 	CRGBPalette16 currentPalette;
 	TBlendType currentBlending;
 
@@ -57,8 +62,10 @@
 		gHue++;
 		}
 	}
-	void LightingCues::getPosition(int virtualAddr, int max, int min){
-		
+	void LightingCues::setPosition(int virtualAddr, int max, int min){
+		virtualAddress = virtualAddr;
+		maxDrums = max;
+		minDrums = min;
 	}
 	void LightingCues::setLightColor(int color){
 		rainbowCue = false;
@@ -184,6 +191,15 @@
 	    dothue += 256 / 8;
 	  }
 	}
+	void LightingCues::juggleStagger() {
+	  // eight colored dots, weaving in and out of sync with each other
+	  fadeToBlackBy( leds, NUM_LEDS, 11 - lightSpeed);
+	  byte dothue = 0;
+	  for( int i = 0; i < lightSpeed + 5; i++) {
+	    leds[beatsin16(i + 7,0,NUM_LEDS,timeOffSet,0)] |= CHSV(dothue, 200, brightness);
+	    dothue += 256 / 8;
+	  }
+	}
 	void LightingCues::rainbowReact(){
 		if(peakAmp){
 			for(int i=0; i< NUM_LEDS; i++) {
@@ -195,6 +211,13 @@
 		else{
 			fadeToBlackBy(leds, NUM_LEDS, REACT_FADE_INTERVAL);
 		}
+	}
+	void LightingCues::rainbowStagger(){
+		for(int i=0; i< NUM_LEDS; i++) {
+			int offset = virtualAddress * 10;
+	    	leds[i] = ColorFromPalette(currentPalette,gHue + offset,brightness,currentBlending);
+	    }
+	    gHue += lightSpeed / 3;
 	}
 	void LightingCues::solidReact(){
 
