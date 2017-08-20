@@ -20,6 +20,8 @@ class LightingCues {
     void setSpeed(int change);
     int getSpeed();
     void peakDet(int amp);
+    void setPosition(int virtualAddr, int max, int min);
+    
 
   private:
     typedef void (LightingCues::*FP)();
@@ -47,9 +49,10 @@ class LightingCues {
     void juggle();
     void solidColor();
     void rainbowCycle();
-    void staggerRainbow();
     void rainbowReact();
     void solidReact();
+    void rainbowStagger();
+    void juggleStagger();
     // State modifier buttons
     void speedUp();
     void slowDown();
@@ -65,7 +68,6 @@ class LightingCues {
     void callCue(int cue);
     void NOCUE();
 
-    void getPosition(int virtualAddr, int max, int min);
 };
 
 // extern LightingCues LC;
