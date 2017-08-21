@@ -214,7 +214,7 @@
 	}
 	void LightingCues::rainbowStagger(){
 		for(int i=0; i< NUM_LEDS; i++) {
-			int offset = virtualAddress * 10;
+			int offset = virtualAddress * 3;
 	    	leds[i] = ColorFromPalette(currentPalette,gHue + offset,brightness,currentBlending);
 	    }
 	    gHue += lightSpeed / 3;
