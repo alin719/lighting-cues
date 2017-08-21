@@ -212,7 +212,7 @@
 		if(peakAmp){
 			for(int i=0; i< NUM_LEDS; i++) {
 	      	leds[i] = ColorFromPalette(currentPalette,gHue,peakAmp,currentBlending);
-	   		gHue += lightSpeed / 3;
+	   		gHue += lightSpeed / 15;
 	   		}
 	   	peakAmp = 0;
 		}
