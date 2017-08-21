@@ -21,6 +21,7 @@ class LightingCues {
     int getSpeed();
     void peakDet(int amp);
     void setPosition(int virtualAddr, int max, int min);
+    void setMaster(bool master);
 
 
   private:

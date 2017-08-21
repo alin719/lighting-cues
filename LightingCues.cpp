@@ -31,6 +31,8 @@
 	static int virtualAddress = 0;
 	static int maxDrums = 0;
 	static int minDrums = 0;
+
+	static bool isMaster = false;
 	
 	CRGBPalette16 currentPalette;
 	TBlendType currentBlending;
@@ -54,6 +56,9 @@
 	    //Call proper function
     	if (curCue < 44){
     		callCue(curCue);
+    		if(isMaster){
+    			leds[0] = CRGB::Red;
+    		}
    			FastLED.show(); 
     	}  
 	    
@@ -61,6 +66,9 @@
 		lastGHue = micros();
 		gHue++;
 		}
+	}
+	void LightingCues::setMaster(bool master){
+		isMaster = master;
 	}
 	void LightingCues::setPosition(int virtualAddr, int max, int min){
 		virtualAddress = virtualAddr;
