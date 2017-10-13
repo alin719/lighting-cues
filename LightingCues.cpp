@@ -57,7 +57,7 @@
 	void LightingCues::lightingLoop(){
 
 	    //Call proper function
-    	if (curCue < 44 && !isOff){
+    	if (curCue < 44){//} && !isOff){
     		callCue(curCue);
     		if(isMaster){
     			leds[0] = CRGB::Red;
@@ -118,17 +118,17 @@
 		peakAmp = amp;
 	}
 	void LightingCues::blackout() {
-		if (isOff) {
-			isOff = false;
-			curCue = lastCue;
-			setCue(curCue);
-			callCue(curCue);
-		} else {
-			isOff = true;
+		// if (isOff) {
+		// 	isOff = false;
+		// 	curCue = lastCue;
+		// 	setCue(curCue);
+		// 	callCue(curCue);
+		// } else {
+			// isOff = true;
 			fadeToBlackBy(leds, NUM_LEDS, 255);
 			FastLED.show();  	
-			pausePlay();
-		}
+			// pausePlay();
+		// }
 		// fadeToBlackBy(leds, NUM_LEDS, 255);
 		// fadeToBlackBy(leds, NUM_LEDS, 255);
 		// fadeToBlackBy(leds, NUM_LEDS, 255);
@@ -251,7 +251,7 @@
   }
 
   bool LightingCues::shouldSetCue(int cue) {
-    if (cue <= 3 || cue == 27 || cue == 31){
+    if (cue <= 2 || cue == 27 || cue == 31){
 	  lastCue = curCue;
       callCue(cue);
       return false;
