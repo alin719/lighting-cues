@@ -28,6 +28,9 @@
 	static int timeOffSet = 0;
 	static int peakAmp = 0;
 
+	static bool isOff = false;
+	static int lastCue = 0;
+
 	static int virtualAddress = 0;
 	static int maxDrums = 0;
 	static int minDrums = 0;
@@ -54,7 +57,7 @@
 	void LightingCues::lightingLoop(){
 
 	    //Call proper function
-    	if (curCue < 44){
+    	if (curCue < 44 && !isOff){
     		callCue(curCue);
     		if(isMaster){
     			leds[0] = CRGB::Red;
@@ -63,8 +66,8 @@
     	}  
 	    
 		if(micros() - lastGHue > (11 - lightSpeed) * 10000){
-		lastGHue = micros();
-		gHue++;
+			lastGHue = micros();
+			gHue++;
 		}
 	}
 	void LightingCues::setMaster(bool master){
@@ -106,23 +109,35 @@
 		}
 	}
 	void LightingCues::setCue(int cue){
-    	if (shouldSetCue(cue)) curCue = cue;
+    	if (shouldSetCue(cue)) {
+    		if (lastCue != curCue) lastCue = curCue;
+    		curCue = cue;
+    	}
 	}
 	void LightingCues::peakDet(int amp){
 		peakAmp = amp;
 	}
 	void LightingCues::blackout() {
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		FastLED.show();  
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		fadeToBlackBy(leds, NUM_LEDS, 255);
-		FastLED.show();  
-		pausePlay();
+		if (isOff) {
+			isOff = false;
+			curCue = lastCue;
+			setCue(curCue);
+			callCue(curCue);
+		} else {
+			isOff = true;
+			fadeToBlackBy(leds, NUM_LEDS, 255);
+			FastLED.show();  	
+			pausePlay();
+		}
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		// fadeToBlackBy(leds, NUM_LEDS, 255);
+		// FastLED.show();  
 	}
 
 	void LightingCues::NOCUE() {
@@ -236,7 +251,8 @@
   }
 
   bool LightingCues::shouldSetCue(int cue) {
-    if (cue <= 4 || cue == 27 || cue == 31){
+    if (cue <= 3 || cue == 27 || cue == 31){
+	  lastCue = curCue;
       callCue(cue);
       return false;
     }
