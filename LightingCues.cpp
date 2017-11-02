@@ -83,7 +83,7 @@
 		rainbowCue = true;
 	}
 	void LightingCues::speedUp(){
-		if(lightSpeed < 50){
+		if(lightSpeed < 10){
 			lightSpeed++;	
 		}
 	}
@@ -150,7 +150,9 @@
 		return lightSpeed;
 	}
 	void LightingCues::setSpeed(int change){
-		lightSpeed = change;
+		if (lightSpeed > 0 && lightSpeed < 20){
+			lightSpeed = change;
+		}
 	}
 	int LightingCues::getGHue(){
 		return gHue;
