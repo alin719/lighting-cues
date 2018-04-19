@@ -1,5 +1,6 @@
 #ifndef LightingCues_h
 #define LightingCues_h
+#include "stdint.h"
 
 class LightingCues {
   public:
@@ -15,14 +16,19 @@ class LightingCues {
     int getGHue();
     void setTimeOffset(int set);
     int getTimeOffset();
+    void setBaseOffset(int set);
+    int getBaseOffset();
     void setBrightness(int change);
     int getBrightness();
     void setSpeed(int change);
     int getSpeed();
     void peakDet(int amp);
-    void setPosition(int virtualAddr, int max, int min);
     void setMaster(bool master);
 
+    void shiftTimeOffset();
+    // Positional Setters
+    void setPosition(uint8_t input_position);
+    void setNumDrums(uint8_t input_numDrums);
 
   private:
     typedef void (LightingCues::*FP)();
@@ -37,7 +43,7 @@ class LightingCues {
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::speedUp,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::slowDown,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::bpm,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::juggle,
+      &LightingCues::NOCUE, &LightingCues::sinelon, &LightingCues::rainbowCycleOffset, &LightingCues::juggle,
       &LightingCues::NOCUE, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
     };
     
@@ -50,6 +56,7 @@ class LightingCues {
     void juggle();
     void solidColor();
     void rainbowCycle();
+    void rainbowCycleOffset();
     void rainbowReact();
     void solidReact();
     void rainbowStagger();

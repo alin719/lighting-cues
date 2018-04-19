@@ -24,17 +24,17 @@ static int currColor = 0;
 static int curCue = 0;
 static bool rainbowCue = true;
 static int lightSpeed = 10; // 0 - 10
-static int brightness = 130;
+static int brightness = 50;
 static bool isActive = true;
+static int baseOffSet = 0;
 static int timeOffSet = 0;
 static int peakAmp = 0;
 
 static bool isOff = false;
 static int lastCue = 0;
 
-static int virtualAddress = 0;
-static int maxDrums = 0;
-static int minDrums = 0;
+static uint8_t position = 0;
+static uint8_t numDrums = 1;
 
 static bool isMaster = false;
 
@@ -48,7 +48,7 @@ LightingCues::~LightingCues() {
 
 }
 void LightingCues::lightSetup() {
-	delay(3000);
+	delay(2000);
 	FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 	FastLED.setBrightness(brightness);
 
@@ -74,11 +74,16 @@ void LightingCues::lightingLoop() {
 void LightingCues::setMaster(bool master) {
 	isMaster = master;
 }
-void LightingCues::setPosition(int virtualAddr, int max, int min) {
-	virtualAddress = virtualAddr;
-	maxDrums = max;
-	minDrums = min;
+
+void LightingCues::setPosition(uint8_t input_position) {
+	position = input_position;
+	shiftTimeOffset();
 }
+void LightingCues::setNumDrums(uint8_t input_numDrums) {
+	numDrums = input_numDrums;
+	shiftTimeOffset();
+}
+
 void LightingCues::setLightColor(int color) {
 	rainbowCue = false;
 	currColor = color;
@@ -143,12 +148,33 @@ void LightingCues::blackout() {
 
 void LightingCues::NOCUE() {
 }
+
+void LightingCues::shiftTimeOffset() {
+	int positionOffset = 0;
+	if (curCue == 38 or curCue == 37) { // Currently just set for rainbowCycleOffset
+		int TOTAL_OFFSET = MICROS_PER_UPDATE*255/lightSpeed*3;
+		positionOffset = TOTAL_OFFSET*position/numDrums;
+	}
+	timeOffSet = baseOffSet + positionOffset;
+}
+
+void LightingCues::setBaseOffset(int set) {
+	baseOffSet = set;
+	shiftTimeOffset();
+}
+
+int LightingCues::getBaseOffset() {
+	return baseOffSet;
+}
+
 void LightingCues::setTimeOffset(int set) {
 	timeOffSet = set;
 }
+
 int LightingCues::getTimeOffset() {
 	return timeOffSet;
 }
+
 void LightingCues::testOffset() {
 	if (timeOffSet == 1000) {
 		timeOffSet = 0;
@@ -176,6 +202,8 @@ int LightingCues::getGHue() {
 void LightingCues::setGHue(int change) {
 	gHue = change;
 }
+
+
 
 // void LightingCues::addGlitter( fract8 chanceOfGlitter)
 // {
@@ -239,8 +267,9 @@ void LightingCues::rainbowReact() {
 	}
 }
 void LightingCues::rainbowStagger() {
+	int staggerPerdecage = 8;
+	int offset = 255*position/numDrums*staggerPerdecage/10;	
 	for (int i = 0; i < NUM_LEDS; i++) {
-		int offset = virtualAddress * 3;
 		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness, currentBlending);
 	}
 	gHue += lightSpeed / 3;
@@ -268,6 +297,11 @@ void LightingCues::rainbowCycle() {
 		leds[i] = ColorFromPalette(currentPalette, gHue, brightness, currentBlending);
 	}
 	gHue += lightSpeed / 3;
+}
+
+void LightingCues::rainbowCycleOffset() {
+	//Cue 38
+	rainbowCycle();
 }
 
 
