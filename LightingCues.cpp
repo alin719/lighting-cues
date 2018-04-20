@@ -39,6 +39,22 @@ static uint8_t numDrums = 1;
 static bool isMaster = false;
 
 CRGBPalette16 currentPalette;
+DEFINE_GRADIENT_PALETTE( cardinalStripe_gp ) {
+0,   255,  0,  0,   //red
+63,   255,  0,  0,   //to red
+64,   255,255,255, //to white
+127,   255,255,255, //to white
+128,   255,  0,  0,   //to red
+191,   255,  0,  0,   //to red
+192,   255,255,255, //to white
+255,   255,255,255 //to white
+}; //full white
+DEFINE_GRADIENT_PALETTE( red_gp) {
+	0, 255, 0, 0, //it's just red
+	255, 255, 0, 0 //it's still just red
+};
+
+
 TBlendType currentBlending;
 
 LightingCues::LightingCues() {
@@ -52,7 +68,10 @@ void LightingCues::lightSetup() {
 	FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 	FastLED.setBrightness(brightness);
 
+	//TODO: return to RainbowColors_p;
+	//currentPalette = heatmap_gp;
 	currentPalette = RainbowColors_p;
+
 	currentBlending = LINEARBLEND;
 }
 void LightingCues::lightingLoop() {
@@ -202,8 +221,19 @@ int LightingCues::getGHue() {
 void LightingCues::setGHue(int change) {
 	gHue = change;
 }
+void LightingCues::redPalette() {	
+	currentPalette = red_gp;
+	rainbowCycle();
+}
+void LightingCues::stripePalette() {	
+	currentPalette = cardinalStripe_gp;
+	rainbowCycle();
+}
+void LightingCues::rainbowPalette() {
+	currentPalette = RainbowColors_p;
+	rainbowCycle();
 
-
+}
 
 // void LightingCues::addGlitter( fract8 chanceOfGlitter)
 // {
@@ -233,7 +263,13 @@ void LightingCues::bpm()
 	}
 }
 void LightingCues::strobeColor() {
-
+	//Like BPM but with binary brightness
+	uint8_t BeatsPerMinute = 180;
+	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
+	int on = beat/128;
+	for(int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), on*255);
+	}
 }
 
 void LightingCues::juggle() {
