@@ -27,8 +27,9 @@ class LightingCues {
 
     void shiftTimeOffset();
     // Positional Setters
-    void setPosition(uint8_t input_position);
-    void setNumDrums(uint8_t input_numDrums);
+    void setPositionInfo(uint8_t setPosition, uint8_t setCount, int setSubPosition, int setSubCount);
+    void assignInstrumentation(bool setIsSnare, bool setIsAxis);
+
 
   private:
     typedef void (LightingCues::*FP)();

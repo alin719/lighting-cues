@@ -34,9 +34,13 @@ static bool isOff = false;
 static int lastCue = 0;
 
 static uint8_t position = 0;
-static uint8_t numDrums = 1;
+static uint8_t count = 1;
+static uint8_t subCount = 1;
+static uint8_t subPosition = 0;
 
 static bool isMaster = false;
+static bool isSnare = false;
+static bool isAxis = false;
 
 CRGBPalette16 currentPalette;
 TBlendType currentBlending;
@@ -75,12 +79,16 @@ void LightingCues::setMaster(bool master) {
 	isMaster = master;
 }
 
-void LightingCues::setPosition(uint8_t input_position) {
-	position = input_position;
-	shiftTimeOffset();
+void LightingCues::assignInstrumentation(bool setIsSnare, bool setIsAxis) {
+	isSnare = setIsSnare;
+	isAxis = setIsAxis;
 }
-void LightingCues::setNumDrums(uint8_t input_numDrums) {
-	numDrums = input_numDrums;
+
+void LightingCues::setPositionInfo(uint8_t setPosition, uint8_t setCount, int setSubPosition, int setSubCount) {
+	position = setPosition;
+	count = setCount;
+	subPosition = setSubPosition;
+	subCount = setSubCount;
 	shiftTimeOffset();
 }
 
@@ -153,10 +161,11 @@ void LightingCues::shiftTimeOffset() {
 	int positionOffset = 0;
 	if (curCue == 38 or curCue == 37) { // Currently just set for rainbowCycleOffset
 		int TOTAL_OFFSET = MICROS_PER_UPDATE*255/lightSpeed*3;
-		positionOffset = TOTAL_OFFSET*position/numDrums;
+		positionOffset = TOTAL_OFFSET*position/count;
 	}
 	timeOffSet = baseOffSet + positionOffset;
 }
+
 
 void LightingCues::setBaseOffset(int set) {
 	baseOffSet = set;
@@ -268,7 +277,7 @@ void LightingCues::rainbowReact() {
 }
 void LightingCues::rainbowStagger() {
 	int staggerPerdecage = 8;
-	int offset = 255*position/numDrums*staggerPerdecage/10;	
+	int offset = 255*position/count*staggerPerdecage/10;	
 	for (int i = 0; i < NUM_LEDS; i++) {
 		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness, currentBlending);
 	}
