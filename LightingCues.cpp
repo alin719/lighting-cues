@@ -38,6 +38,11 @@ static uint8_t numDrums = 1;
 
 static bool isMaster = false;
 
+// position 	Snare->Axis->Toms
+// count		|drums|
+// subPosition 	0 indexed at Axis, outward
+// subCount		|like drums| 
+
 CRGBPalette16 currentPalette;
 DEFINE_GRADIENT_PALETTE( cardinalStripe_gp ) {
 0,   255,  0,  0,   //red
@@ -223,16 +228,12 @@ void LightingCues::setGHue(int change) {
 }
 void LightingCues::redPalette() {	
 	currentPalette = red_gp;
-	rainbowCycle();
 }
 void LightingCues::stripePalette() {	
 	currentPalette = cardinalStripe_gp;
-	rainbowCycle();
 }
 void LightingCues::rainbowPalette() {
 	currentPalette = RainbowColors_p;
-	rainbowCycle();
-
 }
 
 // void LightingCues::addGlitter( fract8 chanceOfGlitter)
@@ -250,7 +251,17 @@ void LightingCues::sinelon()
 	leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);
 }
 void LightingCues::larson() {
-
+	// Scans down the line
+	int staggerPerdecage = 8;
+	int offset = 255*position/numDrums*staggerPerdecage/10;
+	if()
+	for (int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness, currentBlending);
+	}
+	gHue += lightSpeed / 3;
+}
+void LightingCues::axisOutLarson() {
+	// Scans down the line
 
 }
 void LightingCues::bpm()
@@ -262,11 +273,11 @@ void LightingCues::bpm()
 		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), beat - gHue + (i * 10));
 	}
 }
-void LightingCues::strobeColor() {
+void LightingCues::strobeRainbow() {
 	//Like BPM but with binary brightness
-	uint8_t BeatsPerMinute = 180;
+	uint8_t BeatsPerMinute = 18*(lightSpeed + 1);
 	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
-	int on = beat/128;
+	int on = beat/200;
 	for(int i = 0; i < NUM_LEDS; i++) {
 		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), on*255);
 	}
