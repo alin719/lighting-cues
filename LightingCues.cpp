@@ -261,17 +261,28 @@ void LightingCues::sinelon()
 }
 void LightingCues::larson() {
 	// Scans down the line
+	uint8_t BeatsPerMinute = 62;
+	uint8_t beat = beatsin8(BeatsPerMinute, 0, 255, timeOffSet, 0);
+	int power = (beat*count)/255;
 	int staggerPerdecage = 8;
-	int offset = 255*position/numDrums*staggerPerdecage/10;
-	if()
+	int offset = 255*position/count*staggerPerdecage/10;
 	for (int i = 0; i < NUM_LEDS; i++) {
-		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness, currentBlending);
+		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness/(1<<(abs(position - power))), currentBlending);
 	}
 	gHue += lightSpeed / 3;
 }
 void LightingCues::axisOutLarson() {
 	// Scans down the line
-
+	// Scans down the line
+	uint8_t BeatsPerMinute = 62;
+	uint8_t beat = beatsin8(BeatsPerMinute, 0, 255, timeOffSet, 0);
+	int power = (beat*subCount)/255;
+	int staggerPerdecage = 8;
+	int offset = 255*position/count*staggerPerdecage/10;
+	for (int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness/(1<<(abs(subPosition - power))), currentBlending);
+	}
+	gHue += lightSpeed / 3;
 }
 void LightingCues::bpm()
 {
