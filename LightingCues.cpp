@@ -33,6 +33,9 @@ static int peakAmp = 0;
 static bool isOff = false;
 static int lastCue = 0;
 
+// For center sinelon offset
+static int lastPos = 0;
+
 static uint8_t position = 0;
 static uint8_t count = 1;
 static uint8_t subCount = 1;
@@ -83,6 +86,7 @@ void LightingCues::lightSetup() {
 
 	currentBlending = LINEARBLEND;
 }
+
 void LightingCues::lightingLoop() {
 
 	//Call proper function
@@ -156,40 +160,21 @@ void LightingCues::peakDet(int amp) {
 	peakAmp = amp;
 }
 void LightingCues::blackout() {
-	// if (isOff) {
-	// 	isOff = false;
-	// 	curCue = lastCue;
-	// 	setCue(curCue);
-	// 	callCue(curCue);
-	// } else {
-	// isOff = true;
 	fadeToBlackBy(leds, NUM_LEDS, 255);
 	FastLED.show();
-	// pausePlay();
-	// }
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-	// fadeToBlackBy(leds, NUM_LEDS, 255);
-	// FastLED.show();
 }
 
 void LightingCues::NOCUE() {
 }
 
 void LightingCues::shiftTimeOffset() {
-	int positionOffset = 0;
-	if (curCue == 38 or curCue == 37) { // Currently just set for rainbowCycleOffset
-		int TOTAL_OFFSET = MICROS_PER_UPDATE*255/lightSpeed*3;
-		positionOffset = TOTAL_OFFSET*position/count;
-	}
-	timeOffSet = baseOffSet + positionOffset;
+	// int positionOffset = 0;
+	// if (curCue == 38 or curCue == 37) { // Currently just set for rainbowCycleOffset
+	// 	int TOTAL_OFFSET = MICROS_PER_UPDATE*255/lightSpeed*3;
+	// 	positionOffset = TOTAL_OFFSET*position/count;
+	// }
+	// timeOffSet = baseOffSet + positionOffset;
 }
-
 
 void LightingCues::setBaseOffset(int set) {
 	baseOffSet = set;
@@ -244,8 +229,7 @@ void LightingCues::stripePalette() {
 void LightingCues::rainbowPalette() {
 	currentPalette = RainbowColors_p;
 }
-
-// void LightingCues::addGlitter( fract8 chanceOfGlitter)
+// void LightingCues::addGlitter(fract8 chanceOfGlitter)
 // {
 //   if( random8() < chanceOfGlitter) {
 //     leds[ random16(NUM_LEDS) ] += CRGB::White;
@@ -259,6 +243,29 @@ void LightingCues::sinelon()
 	int pos = beatsin16(lightSpeed * 6, 0, NUM_LEDS, timeOffSet, 0);
 	leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);
 }
+
+void LightingCues::centerSinelon() {
+	// a colored dot sweeping back and forth, with fading trails
+	fadeToBlackBy( leds, NUM_LEDS, 2);
+	int pos = beatsin16(lightSpeed * 6, 0, NUM_LEDS, timeOffSet, 0);
+	if (isSnare) pos = NUM_LEDS - pos;
+	leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);	
+}
+
+void LightingCues::centerSinelonOffset() {
+	// a colored dot sweeping back and forth, with fading trails
+	fadeToBlackBy( leds, NUM_LEDS, 2);
+	int pos = beatsin16(lightSpeed * 6, 0, NUM_LEDS, timeOffSet, 0);
+	if (isSnare) pos = NUM_LEDS - pos;
+	int multiplier = 1;
+	if (pos < lastPos) { //coming backwards
+		multiplier = -1;
+	}
+	pos += abs(multiplier*subPosition*NUM_LEDS/count);
+	pos = subPosition % NUM_LEDS;
+	leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);	
+}
+
 void LightingCues::larson() {
 	// Scans down the line
 	uint8_t BeatsPerMinute = 62;
@@ -341,6 +348,18 @@ void LightingCues::rainbowStagger() {
 	}
 	gHue += lightSpeed / 3;
 }
+
+void LightingCues::rainbowCenterStagger() {
+	int staggerPerdecage = 8;
+	uint8_t functionalPosition = subPosition;
+	if (!isAxis) functionalPosition++;
+	int offset = 255*functionalPosition/count*staggerPerdecage/10;	
+	for (int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness, currentBlending);
+	}
+	gHue += lightSpeed / 3;
+}
+
 void LightingCues::solidReact() {
 
 }
@@ -366,9 +385,6 @@ void LightingCues::rainbowCycle() {
 	gHue += lightSpeed / 3;
 }
 
-void LightingCues::rainbowCycleOffset() {
-	//Cue 38
-	rainbowCycle();
-}
+
 
 

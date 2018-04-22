@@ -39,29 +39,35 @@ class LightingCues {
       &LightingCues::NOCUE, &LightingCues::testOffset,  &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::redPalette, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::stripePalette, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-      &LightingCues::strobeColor, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowStagger,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowCenterStagger,
+      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowStagger,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::speedUp,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::slowDown,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::bpm,
-      &LightingCues::NOCUE, &LightingCues::sinelon, &LightingCues::rainbowCycleOffset, &LightingCues::juggle,
-      &LightingCues::NOCUE, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
+      &LightingCues::NOCUE, &LightingCues::sinelon, &LightingCues::NOCUE, &LightingCues::juggle,
+      &LightingCues::strobeRainbow, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
     };
     
     // Animations
     void blackout();
     void sinelon();
+    void centerSinelon();
+    void centerSinelonOffset();
     void larson();
     void bpm();
-    void strobeColor();
+    void strobeRainbow();
     void juggle();
     void solidColor();
     void rainbowCycle();
-    void rainbowCycleOffset();
+    // void rainbowCycleOffset();
     void rainbowReact();
     void solidReact();
     void rainbowStagger();
+    void rainbowCenterStagger();
     void juggleStagger();
+    void axisOutLarson();
+    // void addGlitter( fract8 chanceOfGlitter);
+
     // State modifier buttons
     void speedUp();
     void slowDown();
