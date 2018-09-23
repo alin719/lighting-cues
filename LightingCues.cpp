@@ -264,15 +264,15 @@ void LightingCues::setPaletteCode(int code) {
 		}
 	}
 }
-// void LightingCues::redPalette() {	
-// 	currentPalette = red_gp;
-// }
-// void LightingCues::stripePalette() {	
-// 	currentPalette = cardinalStripe_gp;
-// }
-// void LightingCues::rainbowPalette() {
-// 	currentPalette = RainbowColors_p;
-// }
+void LightingCues::redPalette() {	
+	setPaletteCode(1);
+}
+void LightingCues::stripePalette() {	
+	setPaletteCode(2);	
+}
+void LightingCues::rainbowPalette() {
+	setPaletteCode(0);
+}
 // void LightingCues::addGlitter(fract8 chanceOfGlitter)
 // {
 //   if( random8() < chanceOfGlitter) {

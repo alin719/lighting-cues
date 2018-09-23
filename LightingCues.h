@@ -81,9 +81,9 @@ class LightingCues {
     void setLightColor(int color); //hex 
     void setRainbow();
     void testOffset();
-    //void redPalette();
-    //void stripePalette();
-    //void rainbowPalette();
+    void redPalette();
+    void stripePalette();
+    void rainbowPalette();
     
     //Helpers
     bool shouldSetCue(int cue);
