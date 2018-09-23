@@ -10,7 +10,7 @@
 #define DATA_PIN    2
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS    67 //Axis has 135
+#define NUM_LEDS    67 //Axis has 135, rest have 67
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
 #define REACT_FADE_INTERVAL 30 //0-255
