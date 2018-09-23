@@ -36,16 +36,16 @@ class LightingCues {
     //Command table that we index into with a cue to choose the function we are running.
     FP const commandTable[44] = {
       &LightingCues::brightnessUp, &LightingCues::brightnessDown, &LightingCues::NOCUE, &LightingCues::blackout,
-      &LightingCues::testOffset, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::redPalette, &LightingCues::testOffset,  &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::stripePalette, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
+      &LightingCues::rainbowPalette, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowCenterStagger,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowStagger,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::speedUp,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::slowDown,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::bpm,
-      &LightingCues::NOCUE, &LightingCues::sinelon, &LightingCues::NOCUE, &LightingCues::juggle,
-      &LightingCues::NOCUE, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
+      &LightingCues::axisOutLarson, &LightingCues::larson, &LightingCues::centerBpm, &LightingCues::bpm,
+      &LightingCues::NOCUE, &LightingCues::centerSinelon, &LightingCues::centerSinelonOffset, &LightingCues::juggle,
+      &LightingCues::strobeRainbow, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
     };
     
     // Animations
@@ -55,7 +55,8 @@ class LightingCues {
     void centerSinelonOffset();
     void larson();
     void bpm();
-    void strobeColor();
+    void centerBpm();
+    void strobeRainbow();
     void juggle();
     void solidColor();
     void rainbowCycle();
@@ -65,6 +66,7 @@ class LightingCues {
     void rainbowStagger();
     void rainbowCenterStagger();
     void juggleStagger();
+    void axisOutLarson();
     // void addGlitter( fract8 chanceOfGlitter);
 
     // State modifier buttons
@@ -76,6 +78,9 @@ class LightingCues {
     void setLightColor(int color); //hex 
     void setRainbow();
     void testOffset();
+    void redPalette();
+    void stripePalette();
+    void rainbowPalette();
     
     //Helpers
     bool shouldSetCue(int cue);

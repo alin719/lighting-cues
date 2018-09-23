@@ -10,10 +10,15 @@
 #define DATA_PIN    2
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS    67
+#define NUM_LEDS    67 //Axis has 135, rest have 67
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
 #define REACT_FADE_INTERVAL 30 //0-255
+
+#define MAX_LIGHT_SPEED 	20
+#define MIN_SPEED 			1
+#define MIN_BRIGHTNESS 	20
+#define MAX_BRIGHTNESS 255
 
 CRGB leds[NUM_LEDS];
 static uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
@@ -24,7 +29,7 @@ static int currColor = 0;
 static int curCue = 0;
 static bool rainbowCue = true;
 static int lightSpeed = 10; // 0 - 10
-static int brightness = 50;
+static int brightness = 128;
 static bool isActive = true;
 static int baseOffSet = 0;
 static int timeOffSet = 0;
@@ -45,7 +50,28 @@ static bool isMaster = false;
 static bool isSnare = false;
 static bool isAxis = false;
 
+// position 	Snare->Axis->Toms
+// count		|drums|
+// subPosition 	0 indexed at Axis, outward
+// subCount		|like drums| 
+
 CRGBPalette16 currentPalette;
+DEFINE_GRADIENT_PALETTE( cardinalStripe_gp ) {
+0,   255,  0,  0,   //red
+63,   255,  0,  0,   //to red
+64,   255,255,255, //to white
+127,   255,255,255, //to white
+128,   255,  0,  0,   //to red
+191,   255,  0,  0,   //to red
+192,   255,255,255, //to white
+255,   255,255,255 //to white
+}; //full white
+DEFINE_GRADIENT_PALETTE( red_gp) {
+	0, 255, 0, 0, //it's just red
+	255, 255, 0, 0 //it's still just red
+};
+
+
 TBlendType currentBlending;
 
 LightingCues::LightingCues() {
@@ -59,7 +85,10 @@ void LightingCues::lightSetup() {
 	FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 	FastLED.setBrightness(brightness);
 
+	//TODO: return to RainbowColors_p;
+	//currentPalette = heatmap_gp;
 	currentPalette = RainbowColors_p;
+
 	currentBlending = LINEARBLEND;
 }
 
@@ -93,7 +122,7 @@ void LightingCues::setPositionInfo(uint8_t setPosition, uint8_t setCount, int se
 	count = setCount;
 	subPosition = setSubPosition;
 	subCount = setSubCount;
-	shiftTimeOffset();
+	// shiftTimeOffset();
 }
 
 void LightingCues::setLightColor(int color) {
@@ -104,12 +133,12 @@ void LightingCues::setRainbow() {
 	rainbowCue = true;
 }
 void LightingCues::speedUp() {
-	if (lightSpeed < 10) {
+	if (lightSpeed < MAX_LIGHT_SPEED) {
 		lightSpeed++;
 	}
 }
 void LightingCues::slowDown() {
-	if (lightSpeed > 0) {
+	if (lightSpeed > MIN_SPEED + 1) {
 		lightSpeed--;
 	}
 }
@@ -117,12 +146,12 @@ void LightingCues::pausePlay() {
 	isActive = !isActive;
 }
 void LightingCues::brightnessUp() {
-	if (brightness <= 245) {
+	if (brightness <= MAX_BRIGHTNESS - 10) {
 		brightness += 10;
 	}
 }
 void LightingCues::brightnessDown() {
-	if (brightness >= 10) {
+	if (brightness >= MIN_BRIGHTNESS + 10) {
 		brightness -= 10;
 	}
 }
@@ -144,17 +173,18 @@ void LightingCues::NOCUE() {
 }
 
 void LightingCues::shiftTimeOffset() {
-	// int positionOffset = 0;
+	int positionOffset = 0;
 	// if (curCue == 38 or curCue == 37) { // Currently just set for rainbowCycleOffset
 	// 	int TOTAL_OFFSET = MICROS_PER_UPDATE*255/lightSpeed*3;
 	// 	positionOffset = TOTAL_OFFSET*position/count;
 	// }
-	// timeOffSet = baseOffSet + positionOffset;
+	timeOffSet = baseOffSet + positionOffset;
 }
 
 void LightingCues::setBaseOffset(int set) {
 	baseOffSet = set;
-	shiftTimeOffset();
+	timeOffSet = set;
+	// shiftTimeOffset();
 }
 
 int LightingCues::getBaseOffset() {
@@ -180,13 +210,15 @@ int LightingCues::getBrightness() {
 	return brightness;
 }
 void LightingCues::setBrightness(int change) {
+	if (brightness < MIN_BRIGHTNESS) change = MIN_BRIGHTNESS;
+	if (brightness > MAX_BRIGHTNESS) change = MAX_BRIGHTNESS;
 	brightness = change;
 }
 int LightingCues::getSpeed() {
 	return lightSpeed;
 }
 void LightingCues::setSpeed(int change) {
-	if (lightSpeed > 0 && lightSpeed < 20) {
+	if (lightSpeed > 1 && lightSpeed < 30) {
 		lightSpeed = change;
 	}
 }
@@ -196,7 +228,15 @@ int LightingCues::getGHue() {
 void LightingCues::setGHue(int change) {
 	gHue = change;
 }
-
+void LightingCues::redPalette() {	
+	currentPalette = red_gp;
+}
+void LightingCues::stripePalette() {	
+	currentPalette = cardinalStripe_gp;
+}
+void LightingCues::rainbowPalette() {
+	currentPalette = RainbowColors_p;
+}
 // void LightingCues::addGlitter(fract8 chanceOfGlitter)
 // {
 //   if( random8() < chanceOfGlitter) {
@@ -235,20 +275,61 @@ void LightingCues::centerSinelonOffset() {
 }
 
 void LightingCues::larson() {
-
-
+	// Scans down the line
+	uint8_t BeatsPerMinute = 62;
+	uint8_t beat = beatsin8(BeatsPerMinute, 0, 255, timeOffSet, 0);
+	int power = (beat*count)/255;
+	int staggerPerdecage = 8;
+	int offset = 255*position/count*staggerPerdecage/10;
+	for (int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness/(1<<(2*abs(position - power))), currentBlending);
+	}
+	gHue += lightSpeed / 3;
 }
+void LightingCues::axisOutLarson() {
+	// Scans down the line
+	// Scans down the line
+	uint8_t BeatsPerMinute = 62;
+	uint8_t beat = beatsin8(BeatsPerMinute, 0, 255, timeOffSet, 0);
+	int power = (beat*subCount)/255;
+	int staggerPerdecage = 8;
+	int offset = 255*position/count*staggerPerdecage/10;
+	for (int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness/(1<<(2*abs(subPosition - power))), currentBlending);
+	}
+	gHue += lightSpeed / 3;
+}
+void LightingCues::centerBpm()
+{
+	// colored stripes pulsing at a defined Beats-Per-Minute (BPM)
+	uint8_t BeatsPerMinute = 62;
+	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
+	for ( int i = 0; i < NUM_LEDS; i++) { //9948
+		int pos = i;
+		if (isSnare) pos = NUM_LEDS - pos - 1;
+		leds[pos] = ColorFromPalette(currentPalette, gHue + (pos * 2), beat - gHue + (pos * 10));
+	}
+}
+
 void LightingCues::bpm()
 {
 	// colored stripes pulsing at a defined Beats-Per-Minute (BPM)
 	uint8_t BeatsPerMinute = 62;
 	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
 	for ( int i = 0; i < NUM_LEDS; i++) { //9948
+
 		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), beat - gHue + (i * 10));
 	}
 }
-void LightingCues::strobeColor() {
 
+void LightingCues::strobeRainbow() {
+	//Like BPM but with binary brightness
+	uint8_t BeatsPerMinute = 20*(lightSpeed + 1);
+	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
+	int on = beat/200;
+	for(int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), on*255);
+	}
 }
 
 void LightingCues::juggle() {
@@ -282,8 +363,8 @@ void LightingCues::rainbowReact() {
 	}
 }
 void LightingCues::rainbowStagger() {
-	int staggerPerdecage = 8;
-	int offset = 255*position/count*staggerPerdecage/10;	
+	// int staggerPerdecage = 10;
+	int offset = 255*position/count;//*staggerPerdecage/10;	
 	for (int i = 0; i < NUM_LEDS; i++) {
 		leds[i] = ColorFromPalette(currentPalette, gHue + offset, brightness, currentBlending);
 	}
@@ -310,7 +391,7 @@ void LightingCues::callCue(int cue) {
 }
 
 bool LightingCues::shouldSetCue(int cue) {
-	if (cue <= 2 || cue == 27 || cue == 31) {
+	if (cue <= 2 || cue == 27 || cue == 31 || cue == 4 || cue == 8 | cue == 12) {
 		lastCue = curCue;
 		callCue(cue);
 		return false;
