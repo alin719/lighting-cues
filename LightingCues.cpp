@@ -10,7 +10,8 @@
 #define DATA_PIN    2
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS    67 //Axis has 135, rest have 67
+#define DEFAULT_NUM_LEDS    67 //Axis has 135, rest have 67
+#define DEFAULT_AXIS_NUM_LEDS	135
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
 #define REACT_FADE_INTERVAL 30 //0-255
@@ -20,7 +21,8 @@
 #define MIN_BRIGHTNESS 	20
 #define MAX_BRIGHTNESS 255
 
-CRGB leds[NUM_LEDS];
+static CRGB* leds;
+static int NUM_LEDS = DEFAULT_NUM_LEDS;
 static uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 static uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 static int lastUpdate = 0;
@@ -82,6 +84,9 @@ LightingCues::~LightingCues() {
 }
 void LightingCues::lightSetup() {
 	delay(2000);
+	if (isAxis) NUM_LEDS = DEFAULT_AXIS_NUM_LEDS;
+	leds = new CRGB[NUM_LEDS];
+	
 	FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 	FastLED.setBrightness(brightness);
 
