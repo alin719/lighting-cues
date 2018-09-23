@@ -29,6 +29,7 @@ class LightingCues {
     // Positional Setters
     void setPositionInfo(uint8_t setPosition, uint8_t setCount, int setSubPosition, int setSubCount);
     void assignInstrumentation(bool setIsSnare, bool setIsAxis);
+    bool shouldSetCue(int cue);
 
 
   private:
@@ -83,7 +84,6 @@ class LightingCues {
     void rainbowPalette();
     
     //Helpers
-    bool shouldSetCue(int cue);
     void callCue(int cue);
     void NOCUE();
 
