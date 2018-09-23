@@ -22,6 +22,9 @@ class LightingCues {
     int getBrightness();
     void setSpeed(int change);
     int getSpeed();
+    void setPaletteCode(int code);
+    int getPaletteCode();
+
     void peakDet(int amp);
     void setMaster(bool master);
 
@@ -78,9 +81,9 @@ class LightingCues {
     void setLightColor(int color); //hex 
     void setRainbow();
     void testOffset();
-    void redPalette();
-    void stripePalette();
-    void rainbowPalette();
+    //void redPalette();
+    //void stripePalette();
+    //void rainbowPalette();
     
     //Helpers
     bool shouldSetCue(int cue);

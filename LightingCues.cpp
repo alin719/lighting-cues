@@ -10,7 +10,7 @@
 #define DATA_PIN    2
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
-#define NUM_LEDS    67 //Axis has 135, rest have 67
+#define NUM_LEDS    135 //Axis has 135, rest have 67
 #define MICROS_PER_UPDATE  1000
 #define MICROS_PER_GHUE 80000
 #define REACT_FADE_INTERVAL 30 //0-255
@@ -19,6 +19,7 @@
 #define MIN_SPEED 			1
 #define MIN_BRIGHTNESS 	20
 #define MAX_BRIGHTNESS 255
+#define NUM_PALETTES 3
 
 CRGB leds[NUM_LEDS];
 static uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
@@ -56,6 +57,13 @@ static bool isAxis = false;
 // subCount		|like drums| 
 
 CRGBPalette16 currentPalette;
+
+// default to Rainbow palette
+static int paletteCode = 0;
+// palette codes are:
+// 0: Rainbow
+// 1: Red (red_gp)
+// 2: Red and White (cardinalStripe_gp)
 DEFINE_GRADIENT_PALETTE( cardinalStripe_gp ) {
 0,   255,  0,  0,   //red
 63,   255,  0,  0,   //to red
@@ -82,12 +90,17 @@ LightingCues::~LightingCues() {
 }
 void LightingCues::lightSetup() {
 	delay(2000);
-	FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+	if(isAxis){
+		FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+	} else {
+				FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+	}
 	FastLED.setBrightness(brightness);
 
 	//TODO: return to RainbowColors_p;
 	//currentPalette = heatmap_gp;
 	currentPalette = RainbowColors_p;
+	paletteCode = 0;
 
 	currentBlending = LINEARBLEND;
 }
@@ -228,15 +241,38 @@ int LightingCues::getGHue() {
 void LightingCues::setGHue(int change) {
 	gHue = change;
 }
-void LightingCues::redPalette() {	
-	currentPalette = red_gp;
+
+int LightingCues::getPaletteCode() {
+	return paletteCode;
 }
-void LightingCues::stripePalette() {	
-	currentPalette = cardinalStripe_gp;
+void LightingCues::setPaletteCode(int code) {
+	if(code < NUM_PALETTES){
+		paletteCode = code;
+		switch (paletteCode) {
+			case 0: {
+				currentPalette = RainbowColors_p;
+			}
+			case 1: {
+				currentPalette = red_gp;
+			}
+			case 2: {
+				currentPalette = cardinalStripe_gp;
+			}
+			default: {
+				// do nothing
+			}
+		}
+	}
 }
-void LightingCues::rainbowPalette() {
-	currentPalette = RainbowColors_p;
-}
+// void LightingCues::redPalette() {	
+// 	currentPalette = red_gp;
+// }
+// void LightingCues::stripePalette() {	
+// 	currentPalette = cardinalStripe_gp;
+// }
+// void LightingCues::rainbowPalette() {
+// 	currentPalette = RainbowColors_p;
+// }
 // void LightingCues::addGlitter(fract8 chanceOfGlitter)
 // {
 //   if( random8() < chanceOfGlitter) {
