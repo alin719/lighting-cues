@@ -370,7 +370,7 @@ void LightingCues::centerBpm()
 void LightingCues::bpm()
 {
 	// colored stripes pulsing at a defined Beats-Per-Minute (BPM)
-	uint8_t BeatsPerMinute = lightSpeed;
+	uint8_t BeatsPerMinute = lightSpeed * 6;
 	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
 	for ( int i = 0; i < NUM_LEDS; i++) { //9948
 		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), beat - gHue + (i * 10));
