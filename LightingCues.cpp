@@ -253,12 +253,15 @@ void LightingCues::setPaletteCode(int code) {
 		switch (paletteCode) {
 			case 0: {
 				currentPalette = RainbowColors_p;
+				break;
 			}
 			case 1: {
 				currentPalette = red_gp;
+				break;
 			}
 			case 2: {
 				currentPalette = cardinalStripe_gp;
+				break;
 			}
 			default: {
 				// do nothing
