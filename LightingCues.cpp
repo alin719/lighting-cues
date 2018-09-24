@@ -72,6 +72,10 @@ DEFINE_GRADIENT_PALETTE( red_gp) {
 	0, 255, 0, 0, //it's just red
 	255, 255, 0, 0 //it's still just red
 };
+DEFINE_GRADIENT_PALETTE( white_gp) {
+	0, 255, 255, 255, // it's literally white
+	255, 255, 255, 255 // lmao white
+};
 
 
 TBlendType currentBlending;
@@ -170,8 +174,19 @@ void LightingCues::peakDet(int amp) {
 	peakAmp = amp;
 }
 void LightingCues::blackout() {
-	fadeToBlackBy(leds, NUM_LEDS, 255);
-	FastLED.show();
+	// Short fix since Axis is responding poorly to blackout
+	if(!isAxis){
+		fadeToBlackBy(leds, NUM_LEDS, 255);
+		FastLED.show();
+	}
+}
+
+void LightingCues::flashlight() {
+	CRGBPalette16 white_palette = white_gp;
+	for (int i = 0; i < NUM_LEDS; i++) {
+		leds[i] = ColorFromPalette(white_palette, gHue, brightness);
+	}
+	gHue += lightSpeed / 3;
 }
 
 void LightingCues::NOCUE() {
@@ -319,12 +334,20 @@ void LightingCues::centerBpm()
 void LightingCues::bpm()
 {
 	// colored stripes pulsing at a defined Beats-Per-Minute (BPM)
-	uint8_t BeatsPerMinute = 62;
+	uint8_t BeatsPerMinute = lightSpeed;
 	uint8_t beat = beatsin8(BeatsPerMinute, 64, 255, timeOffSet, 0);
 	for ( int i = 0; i < NUM_LEDS; i++) { //9948
-
 		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), beat - gHue + (i * 10));
 	}
+}
+
+void LightingCues::spin()
+{
+	// spin little bright lights
+	for ( int i = 0; i < NUM_LEDS; i++) { //9948
+		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), (i * 10) - gHue);
+	}
+	gHue += lightSpeed/3;
 }
 
 void LightingCues::strobeRainbow() {
