@@ -210,9 +210,9 @@ int LightingCues::getBrightness() {
 	return brightness;
 }
 void LightingCues::setBrightness(int change) {
-	if (change < MIN_BRIGHTNESS) change = MIN_BRIGHTNESS;
-	if (change > MAX_BRIGHTNESS) change = MAX_BRIGHTNESS;
-	brightness = change;
+	if (change >= MIN_BRIGHTNESS && change <= MAX_BRIGHTNESS) {
+		brightness = change;
+	}
 }
 int LightingCues::getSpeed() {
 	return lightSpeed;
