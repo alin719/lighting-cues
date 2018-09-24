@@ -20,6 +20,7 @@
 #define MIN_SPEED 			1
 #define MIN_BRIGHTNESS 	20
 #define MAX_BRIGHTNESS 255
+#define NUM_PALETTES 3
 
 static CRGB* leds;
 static int NUM_LEDS = DEFAULT_NUM_LEDS;
@@ -58,6 +59,13 @@ static bool isAxis = false;
 // subCount		|like drums| 
 
 CRGBPalette16 currentPalette;
+
+// default to Rainbow palette
+static int paletteCode = 0;
+// palette codes are:
+// 0: Rainbow
+// 1: Red (red_gp)
+// 2: Red and White (cardinalStripe_gp)
 DEFINE_GRADIENT_PALETTE( cardinalStripe_gp ) {
 0,   255,  0,  0,   //red
 63,   255,  0,  0,   //to red
@@ -84,6 +92,7 @@ LightingCues::~LightingCues() {
 }
 void LightingCues::lightSetup() {
 	delay(2000);
+
 	if (isAxis) NUM_LEDS = DEFAULT_AXIS_NUM_LEDS;
 	leds = new CRGB[NUM_LEDS];
 	
@@ -93,6 +102,7 @@ void LightingCues::lightSetup() {
 	//TODO: return to RainbowColors_p;
 	//currentPalette = heatmap_gp;
 	currentPalette = RainbowColors_p;
+	paletteCode = 0;
 
 	currentBlending = LINEARBLEND;
 }
@@ -233,14 +243,40 @@ int LightingCues::getGHue() {
 void LightingCues::setGHue(int change) {
 	gHue = change;
 }
+
+int LightingCues::getPaletteCode() {
+	return paletteCode;
+}
+void LightingCues::setPaletteCode(int code) {
+	if(code < NUM_PALETTES){
+		paletteCode = code;
+		switch (paletteCode) {
+			case 0: {
+				currentPalette = RainbowColors_p;
+				break;
+			}
+			case 1: {
+				currentPalette = red_gp;
+				break;
+			}
+			case 2: {
+				currentPalette = cardinalStripe_gp;
+				break;
+			}
+			default: {
+				// do nothing
+			}
+		}
+	}
+}
 void LightingCues::redPalette() {	
-	currentPalette = red_gp;
+	setPaletteCode(1);
 }
 void LightingCues::stripePalette() {	
-	currentPalette = cardinalStripe_gp;
+	setPaletteCode(2);	
 }
 void LightingCues::rainbowPalette() {
-	currentPalette = RainbowColors_p;
+	setPaletteCode(0);
 }
 // void LightingCues::addGlitter(fract8 chanceOfGlitter)
 // {

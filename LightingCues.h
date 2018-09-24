@@ -22,6 +22,9 @@ class LightingCues {
     int getBrightness();
     void setSpeed(int change);
     int getSpeed();
+    void setPaletteCode(int code);
+    int getPaletteCode();
+
     void peakDet(int amp);
     void setMaster(bool master);
 
