@@ -45,8 +45,8 @@ class LightingCues {
       &LightingCues::rainbowPalette, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowCenterStagger,
       &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::rainbowStagger,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::speedUp,
-      &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::NOCUE, &LightingCues::slowDown,
+      &LightingCues::centerBpm, &LightingCues::centerSinelon, &LightingCues::centerSpin, &LightingCues::speedUp,
+      &LightingCues::bpm, &LightingCues::sinelon, &LightingCues::spin, &LightingCues::slowDown,
       &LightingCues::axisOutLarson, &LightingCues::larson, &LightingCues::bpm, &LightingCues::spin,
       &LightingCues::NOCUE, &LightingCues::centerSinelon, &LightingCues::centerSinelonOffset, &LightingCues::juggle,
       &LightingCues::strobeRainbow, &LightingCues::rainbowReact, &LightingCues::sinelon, &LightingCues::rainbowCycle
@@ -60,8 +60,9 @@ class LightingCues {
     void centerSinelonOffset();
     void larson();
     void bpm();
-    void spin();
     void centerBpm();
+    void spin();
+    void centerSpin();
     void strobeRainbow();
     void juggle();
     void solidColor();

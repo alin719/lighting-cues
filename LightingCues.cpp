@@ -32,7 +32,7 @@ static int currColor = 0;
 static int curCue = 0;
 static bool rainbowCue = true;
 static int lightSpeed = 10; // 0 - 10
-static int brightness = 128;
+static int brightness = 255;
 static bool isActive = true;
 static int baseOffSet = 0;
 static int timeOffSet = 0;
@@ -308,11 +308,12 @@ void LightingCues::sinelon()
 	leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);
 }
 
+
 void LightingCues::centerSinelon() {
 	// a colored dot sweeping back and forth, with fading trails
 	fadeToBlackBy( leds, NUM_LEDS, 2);
 	int pos = beatsin16(lightSpeed * 6, 0, NUM_LEDS, timeOffSet, 0);
-	if (isSnare) pos = NUM_LEDS - pos;
+	if (isSnare) pos = NUM_LEDS - pos - 1;
 	leds[pos] += ColorFromPalette(currentPalette, gHue, brightness, currentBlending);	
 }
 
@@ -320,7 +321,7 @@ void LightingCues::centerSinelonOffset() {
 	// a colored dot sweeping back and forth, with fading trails
 	fadeToBlackBy( leds, NUM_LEDS, 2);
 	int pos = beatsin16(lightSpeed * 6, 0, NUM_LEDS, timeOffSet, 0);
-	if (isSnare) pos = NUM_LEDS - pos;
+	if (isSnare) pos = NUM_LEDS - pos - 1;
 	int multiplier = 1;
 	if (pos < lastPos) { //coming backwards
 		multiplier = -1;
@@ -363,7 +364,7 @@ void LightingCues::centerBpm()
 	for ( int i = 0; i < NUM_LEDS; i++) { //9948
 		int pos = i;
 		if (isSnare) pos = NUM_LEDS - pos - 1;
-		leds[pos] = ColorFromPalette(currentPalette, gHue + (pos * 2), beat - gHue + (pos * 10));
+		leds[pos] = ColorFromPalette(currentPalette, gHue + (i * 2), beat - gHue + (i * 10));
 	}
 }
 
@@ -382,6 +383,17 @@ void LightingCues::spin()
 	// spin little bright lights
 	for ( int i = 0; i < NUM_LEDS; i++) { //9948
 		leds[i] = ColorFromPalette(currentPalette, gHue + (i * 2), (i * 10) - gHue);
+	}
+	gHue += lightSpeed/3;
+}
+
+void LightingCues::centerSpin()
+{
+	// spin little bright lights
+	for ( int i = 0; i < NUM_LEDS; i++) { //9948
+		int pos = i;
+		if (isSnare) pos = NUM_LEDS - pos - 1;
+		leds[pos] = ColorFromPalette(currentPalette, gHue + (i * 2), (i * 10) - gHue);
 	}
 	gHue += lightSpeed/3;
 }
